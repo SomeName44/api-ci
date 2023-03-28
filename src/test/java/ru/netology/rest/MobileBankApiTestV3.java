@@ -23,8 +23,34 @@ class MobileBankApiTestV3 {
           // специализированные проверки - лучше
           .contentType(ContentType.JSON)
           .body("", hasSize(3))
-          .body("[0].currency", equalTo("RUB"))
+          .body("[0].currency", equalTo("RUR"))
           .body("[0].balance", greaterThanOrEqualTo(0))
       ;
     }
+    @Test
+    void shouldReturnSecondSizeInCurrencyUSD() {
+        given()
+         .baseUri("http://localhost:9999/api/v1")
+                // Выполняемые действия
+         .when()
+         .get("/demo/accounts")
+                // Проверки
+         .then()
+         .statusCode(200)
+         .body("[1].currency", equalTo("USD"));
+    }
+    @Test
+    void shouldReturnBalance() {
+        given()
+                .baseUri("http://localhost:9999/api/v1")
+                // Выполняемые действия
+                .when()
+                .get("/demo/accounts")
+                // Проверки
+                .then()
+                .statusCode(200)
+                .body("every { it.balance >= 0}", is (true));
+    }
+
+
 }
